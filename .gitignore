@@ -1,13 +1,14 @@
-*.class
+#*.class
 .settings/
 .project
 .classpath
 bin/
+log/
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
 # Package Files #
-*.jar
+#*.jar
 *.war
 *.ear
 
