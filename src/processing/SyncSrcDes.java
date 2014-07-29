@@ -8,9 +8,12 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class SyncSrcDes implements Runnable {
 
 	FilesSync fileSync;
+	int processing;
 
 	public SyncSrcDes(FilesSync fs) {
 		fileSync = fs;
@@ -18,19 +21,28 @@ public class SyncSrcDes implements Runnable {
 
 	@Override
 	public void run() {
-		fileSync.desLocTextField.setEditable(false);
-		fileSync.srcLocTextField.setEditable(false);
 
+		fileSync.confirmButton.setEnabled(false);
 		fileSync.desFileList = new ArrayList<FileInfo>();
 		fileSync.srcFileList = new ArrayList<FileInfo>();
 
 		// read file list in src and des
+		if (fileSync.srcLocTextField.getText().equals("")
+				|| fileSync.desLocTextField.getText().equals("")) {
+			JOptionPane.showMessageDialog(fileSync.frame,
+					"Choose the folders please!", "Error",
+					JOptionPane.ERROR_MESSAGE);
+			fileSync.confirmButton.setEnabled(true);
+			return;
+		}
 		File srcFolderPath = new File(fileSync.srcLocTextField.getText());
 		File desFolderPath = new File(fileSync.desLocTextField.getText());
 		listFilesInFolder(desFolderPath, fileSync.desFileList,
 				fileSync.desLocTextField.getText());
+		fileSync.progressBar.setValue(5);
 		listFilesInFolder(srcFolderPath, fileSync.srcFileList,
 				fileSync.srcLocTextField.getText());
+		fileSync.progressBar.setValue(10);
 
 		// showFileLists();
 
@@ -45,14 +57,14 @@ public class SyncSrcDes implements Runnable {
 
 		fileSync.desFileList = new ArrayList<FileInfo>();
 		fileSync.srcFileList = new ArrayList<FileInfo>();
-		fileSync.desLocTextField.setEditable(true);
-		fileSync.srcLocTextField.setEditable(true);
 		fileSync.confirmButton.setEnabled(true);
 	}
 
 	protected void compareFiles(String srcPre, String desPre)
 			throws IOException {
 		for (int i = 0; i < fileSync.srcFileList.size(); i++) {
+			fileSync.progressBar.setValue(20 + (int) Math.ceil((double) (i + 1)
+					/ fileSync.srcFileList.size() / 10 * 8 * 100));
 			if (fileSync.srcFileList.get(i).isFolder) {
 				continue;
 			}
@@ -101,7 +113,10 @@ public class SyncSrcDes implements Runnable {
 	}
 
 	protected void compareFolder(String pre) {
+
 		for (int i = 0; i < fileSync.srcFileList.size(); i++) {
+			fileSync.progressBar.setValue(10 + (int) Math.ceil((double) (i + 1)
+					/ fileSync.srcFileList.size() / 10 * 100));
 			boolean ident = false;
 			if (fileSync.srcFileList.get(i).isFolder == false) {
 				continue;

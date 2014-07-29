@@ -37,7 +37,7 @@ import processing.SyncSrcDes;
 public class FilesSync {
 	JMenuBar menuBar;
 	MigLayout migLayout;
-	JFrame frame;
+	public JFrame frame;
 	static TrayIcon trayIcon = null;
 	static SystemTray tray = null;
 	public JLabel srcLocLabel;
@@ -52,7 +52,7 @@ public class FilesSync {
 	public JButton confirmButton;
 	public ArrayList<FileInfo> desFileList;
 	public ArrayList<FileInfo> srcFileList;
-	public String versionString = "1.0.1";
+	public String versionString = "1.0.2";
 
 	public FilesSync fs;
 
@@ -103,7 +103,7 @@ public class FilesSync {
 				JOptionPane.showMessageDialog(frame,
 						"This program is lisenced under GPL v2. \n"
 								+ "Version " + versionString + ""
-								+ "           Sheng, Li " + " 2014.07",
+								+ "           Sheng, Li " + " 2012.05",
 						"About", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
@@ -126,8 +126,9 @@ public class FilesSync {
 				// JFileChooser srcChooser = new JFileChooser(new File("e:\\"));
 				JFileChooser srcChooser = new JFileChooser();
 				srcChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				srcChooser.showOpenDialog(null);
-				srcLocTextField.setText(srcChooser.getSelectedFile().getPath());
+				if (srcChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+					srcLocTextField.setText(srcChooser.getSelectedFile()
+							.getPath());
 			}
 		});
 
@@ -144,21 +145,25 @@ public class FilesSync {
 				// JFileChooser desChooser = new JFileChooser(new File("e:\\"));
 				JFileChooser desChooser = new JFileChooser();
 				desChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-				desChooser.showOpenDialog(null);
-				desLocTextField.setText(desChooser.getSelectedFile().getPath());
+				if (desChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION)
+					desLocTextField.setText(desChooser.getSelectedFile()
+							.getPath());
 			}
 		});
+
+		desLocTextField.setEditable(false);
+		srcLocTextField.setEditable(false);
 
 		progressBar = new JProgressBar(0, 100);
 		progressBar.setValue(0);
 		progressBar.setBounds(20, 160, 450, 25);
+		progressBar.setStringPainted(true);
 		confirmButton = new JButton("confirm");
 		confirmButton.setBounds(350, 200, 80, 20);
 		confirmButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				confirmButton.setEnabled(false);
 				SyncSrcDes syncSrcDes = new SyncSrcDes(fs);
 				new Thread(syncSrcDes).start();
 			}

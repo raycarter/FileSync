@@ -3,6 +3,10 @@ FileSync
 
 Features:
 
+	Version 1.0.2:
+	
+		1. Progress bar is pulled in to show executing progress. 
+		
 	Version 1.0.1:
 	
 		1. Thread is pulled in to execute the sync in background. 
