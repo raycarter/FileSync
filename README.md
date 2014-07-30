@@ -1,7 +1,7 @@
 FileSync
 ========
 
-Features added in versions:
+Features:
 
 	Version 1.0.3:
 	
