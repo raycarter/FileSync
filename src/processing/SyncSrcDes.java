@@ -2,11 +2,17 @@ package processing;
 
 import gui.FilesSync;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -14,6 +20,7 @@ public class SyncSrcDes implements Runnable {
 
 	FilesSync fileSync;
 	int processing;
+	String datetimeForLogName;
 
 	public SyncSrcDes(FilesSync fs) {
 		fileSync = fs;
@@ -21,6 +28,23 @@ public class SyncSrcDes implements Runnable {
 
 	@Override
 	public void run() {
+
+		DateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH_mm_ss");
+		Date date = new Date();
+		datetimeForLogName = dateFormat.format(date);
+
+		File logFolder = new File("log/");
+		if (!logFolder.exists()) {
+			logFolder.mkdir();
+		}
+		try (PrintWriter out = new PrintWriter(new BufferedWriter(
+				new FileWriter("log/" + datetimeForLogName + ".txt", true)))) {
+			out.println("Start: ");
+			out.println("source: " + fileSync.srcLocTextField.getText());
+			out.println("destination: " + fileSync.desLocTextField.getText());
+		} catch (IOException e) {
+			// exception handling left as an exercise for the reader
+		}
 
 		fileSync.confirmButton.setEnabled(false);
 		fileSync.desFileList = new ArrayList<FileInfo>();
@@ -105,9 +129,25 @@ public class SyncSrcDes implements Runnable {
 				}
 				Files.copy(srcFile.toPath(), desFile.toPath(),
 						StandardCopyOption.COPY_ATTRIBUTES);
-				System.out.println("copy: "
-						+ fileSync.srcFileList.get(i).getPathName());
+				String option = "copy";
+				log(fileSync.srcFileList.get(i).getPathName(), option);
 			}
+		}
+
+	}
+
+	void log(String pathName, String option) {
+		DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+		Date date = new Date();
+		String datetime = dateFormat.format(date);
+
+		try (PrintWriter out = new PrintWriter(new BufferedWriter(
+				new FileWriter("log/" + datetimeForLogName + ".txt", true)))) {
+			String toLog = datetime + ": " + option + "  " + pathName;
+			out.println(toLog);
+			System.out.println(toLog);
+		} catch (IOException e) {
+			// exception handling left as an exercise for the reader
 		}
 
 	}

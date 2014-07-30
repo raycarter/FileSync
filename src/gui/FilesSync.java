@@ -56,6 +56,9 @@ public class FilesSync {
 
 	public FilesSync fs;
 
+	int windowWidth = 500;
+	int windowHeight = 300;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -80,7 +83,7 @@ public class FilesSync {
 		this.frame.setIconImage(Toolkit.getDefaultToolkit().getImage(
 				"files/trans128.png"));
 
-		this.frame.setBounds(0, 0, 500, 300);
+		this.frame.setBounds(0, 0, windowWidth, windowHeight);
 		this.frame.setLocationRelativeTo(null);
 		this.frame.setResizable(false);
 
@@ -109,10 +112,16 @@ public class FilesSync {
 		});
 		frame.setJMenuBar(menuBar);
 
-		JPanel rootPanel = new JPanel();
-		rootPanel.setLayout(null);
-		rootPanel.setSize(500, 300);
-		rootPanel.setBackground(new Color(255, 255, 255));
+		/*
+		 * JPanel optionPanel = new JPanel(); optionPanel.setLayout(null);
+		 * optionPanel.setSize(windowWidth, 100); optionPanel.setBackground(new
+		 * Color(255, 255, 255));
+		 */
+
+		JPanel srcDesPanel = new JPanel();
+		srcDesPanel.setLayout(null);
+		srcDesPanel.setSize(windowWidth, 300);
+		srcDesPanel.setBackground(new Color(255, 255, 255));
 		srcLocLabel = new JLabel("src folder:");
 		srcLocLabel.setBounds(20, 20, 100, 20);
 		srcLocTextField = new JTextField();
@@ -169,19 +178,22 @@ public class FilesSync {
 			}
 		});
 
-		rootPanel.add(srcLocLabel);
-		rootPanel.add(srcLocTextField);
-		rootPanel.add(srcLocButton);
-		rootPanel.add(desLocLabel);
-		rootPanel.add(desLocTextField);
-		rootPanel.add(desLocButton);
-		rootPanel.add(progressBar);
-		rootPanel.add(confirmButton);
+		srcDesPanel.add(srcLocLabel);
+		srcDesPanel.add(srcLocTextField);
+		srcDesPanel.add(srcLocButton);
+		srcDesPanel.add(desLocLabel);
+		srcDesPanel.add(desLocTextField);
+		srcDesPanel.add(desLocButton);
+		srcDesPanel.add(progressBar);
+		srcDesPanel.add(confirmButton);
 
+		// this.migLayout = new MigLayout("", "5px[grow, fill]5px",
+		// "5px[100px]5px[grow,fill]5px");
 		this.migLayout = new MigLayout("", "5px[grow, fill]5px",
 				"5px[grow,fill]5px");
 		this.frame.getContentPane().setLayout(this.migLayout);
-		this.frame.getContentPane().add(rootPanel, "cell 0 0");
+		// this.frame.getContentPane().add(optionPanel, "cell 0 0");
+		this.frame.getContentPane().add(srcDesPanel, "cell 0 0");
 		if (SystemTray.isSupported()) {
 			tray();
 		}

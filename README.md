@@ -1,8 +1,12 @@
 FileSync
 ========
 
-Features:
+Features added in versions:
 
+	Version 1.0.3:
+	
+		1. Simple Log-function is built in to log which files are copied. The log-files are created with timestamps as name and stored in folder log/.  
+		
 	Version 1.0.2:
 	
 		1. Progress bar is pulled in to show executing progress. 
